@@ -6,8 +6,8 @@ defmodule TodoWithAuth.AuthenticationTest do
   describe "users" do
     alias TodoWithAuth.Authentication.User
 
-    @valid_attrs %{email: "some email", encrypted_password: "some encrypted_password"}
-    @update_attrs %{email: "some updated email", encrypted_password: "some updated encrypted_password"}
+    @valid_attrs %{email: "email@mail.com", encrypted_password: "some encrypted_password"}
+    @update_attrs %{email: "updated@mail.com", encrypted_password: "some updated encrypted_password"}
     @invalid_attrs %{email: nil, encrypted_password: nil}
 
     def user_fixture(attrs \\ %{}) do
@@ -31,7 +31,7 @@ defmodule TodoWithAuth.AuthenticationTest do
 
     test "create_user/1 with valid data creates a user" do
       assert {:ok, %User{} = user} = Authentication.create_user(@valid_attrs)
-      assert user.email == "some email"
+      assert user.email == "email@mail.com"
       assert user.encrypted_password == "some encrypted_password"
     end
 
@@ -43,7 +43,7 @@ defmodule TodoWithAuth.AuthenticationTest do
       user = user_fixture()
       assert {:ok, user} = Authentication.update_user(user, @update_attrs)
       assert %User{} = user
-      assert user.email == "some updated email"
+      assert user.email == "updated@mail.com"
       assert user.encrypted_password == "some updated encrypted_password"
     end
 

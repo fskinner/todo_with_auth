@@ -20,7 +20,7 @@ defmodule TodoWithAuth.Mixfile do
   def application do
     [
       mod: {TodoWithAuth.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :comeonin]
     ]
   end
 
@@ -38,6 +38,7 @@ defmodule TodoWithAuth.Mixfile do
       {:phoenix_ecto, "~> 3.2"},
       {:postgrex, ">= 0.0.0"},
       {:gettext, "~> 0.11"},
+      {:comeonin, "~> 2.0"},
       {:cowboy, "~> 1.0"}
     ]
   end

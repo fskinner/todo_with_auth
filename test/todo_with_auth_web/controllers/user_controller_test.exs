@@ -4,8 +4,8 @@ defmodule TodoWithAuthWeb.UserControllerTest do
   alias TodoWithAuth.Authentication
   alias TodoWithAuth.Authentication.User
 
-  @create_attrs %{email: "some email", encrypted_password: "some encrypted_password"}
-  @update_attrs %{email: "some updated email", encrypted_password: "some updated encrypted_password"}
+  @create_attrs %{email: "email1@mail.com", encrypted_password: "some encrypted_password"}
+  @update_attrs %{email: "update@mail.com", encrypted_password: "some updated encrypted_password"}
   @invalid_attrs %{email: nil, encrypted_password: nil}
 
   def fixture(:user) do
@@ -32,7 +32,7 @@ defmodule TodoWithAuthWeb.UserControllerTest do
       conn = get conn, user_path(conn, :show, id)
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
-        "email" => "some email",
+        "email" => "email1@mail.com",
         "encrypted_password" => "some encrypted_password"}
     end
 
@@ -52,7 +52,7 @@ defmodule TodoWithAuthWeb.UserControllerTest do
       conn = get conn, user_path(conn, :show, id)
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
-        "email" => "some updated email",
+        "email" => "update@mail.com",
         "encrypted_password" => "some updated encrypted_password"}
     end
 
