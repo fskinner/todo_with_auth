@@ -4,9 +4,9 @@ defmodule TodoWithAuthWeb.UserControllerTest do
   alias TodoWithAuth.Authentication
   alias TodoWithAuth.Authentication.User
 
-  @create_attrs %{email: "email1@mail.com", encrypted_password: "some encrypted_password"}
-  @update_attrs %{email: "update@mail.com", encrypted_password: "some updated encrypted_password"}
-  @invalid_attrs %{email: nil, encrypted_password: nil}
+  @create_attrs %{email: "email1@mail.com", password: "some password"}
+  @update_attrs %{email: "update@mail.com", password: "some updated password"}
+  @invalid_attrs %{email: nil, password: nil}
 
   def fixture(:user) do
     {:ok, user} = Authentication.create_user(@create_attrs)
@@ -32,8 +32,7 @@ defmodule TodoWithAuthWeb.UserControllerTest do
       conn = get conn, user_path(conn, :show, id)
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
-        "email" => "email1@mail.com",
-        "encrypted_password" => "some encrypted_password"}
+        "email" => "email1@mail.com"}
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -52,8 +51,7 @@ defmodule TodoWithAuthWeb.UserControllerTest do
       conn = get conn, user_path(conn, :show, id)
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
-        "email" => "update@mail.com",
-        "encrypted_password" => "some updated encrypted_password"}
+        "email" => "update@mail.com"}
     end
 
     test "renders errors when data is invalid", %{conn: conn, user: user} do

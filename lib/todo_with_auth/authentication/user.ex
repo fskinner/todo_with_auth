@@ -15,19 +15,19 @@ defmodule TodoWithAuth.Authentication.User do
   @doc false
   def changeset(%User{} = user, attrs) do
     user
-    |> cast(attrs, [:email, :encrypted_password])
-    |> validate_required([:email, :encrypted_password])
+    |> cast(attrs, [:email, :password])
+    |> validate_required([:email, :password])
     |> validate_length(:email, min: 5, max: 150)    
     |> validate_format(:email, ~r/@/)
-    |> validate_length(:password, min: 5)
+    |> validate_length(:password, min: 6)
     |> unique_constraint(:email, message: "Email already taken")    
-    # |> put_password_hash
+    |> put_encrypted_password
   end
 
-  defp put_password_hash(changeset) do
+  defp put_encrypted_password(changeset) do
     case changeset do
       %Ecto.Changeset{valid?: true, changes: %{password: pass}} ->
-        put_change(changeset, :password_hash, Comeonin.Bcrypt.hashpwsalt(pass))
+        put_change(changeset, :encrypted_password, Comeonin.Bcrypt.hashpwsalt(pass))
       _ ->
         changeset
     end

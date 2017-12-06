@@ -6,9 +6,9 @@ defmodule TodoWithAuth.AuthenticationTest do
   describe "users" do
     alias TodoWithAuth.Authentication.User
 
-    @valid_attrs %{email: "email@mail.com", encrypted_password: "some encrypted_password"}
-    @update_attrs %{email: "updated@mail.com", encrypted_password: "some updated encrypted_password"}
-    @invalid_attrs %{email: nil, encrypted_password: nil}
+    @valid_attrs %{email: "email@mail.com", password: "some password"}
+    @update_attrs %{email: "updated@mail.com", password: "some updated password"}
+    @invalid_attrs %{email: nil, password: nil}
 
     def user_fixture(attrs \\ %{}) do
       {:ok, user} =
@@ -19,20 +19,30 @@ defmodule TodoWithAuth.AuthenticationTest do
       user
     end
 
+    defp compare_user_fields user do
+      assert user.id == Authentication.get_user!(user.id).id
+      assert user.email == Authentication.get_user!(user.id).email
+      assert user.encrypted_password == Authentication.get_user!(user.id).encrypted_password
+      assert user.inserted_at == Authentication.get_user!(user.id).inserted_at
+      assert user.updated_at == Authentication.get_user!(user.id).updated_at
+    end
+
     test "list_users/0 returns all users" do
-      user = user_fixture()
-      assert Authentication.list_users() == [user]
+      user_fixture()
+
+      Authentication.list_users()
+      |> List.first
+      |> compare_user_fields
     end
 
     test "get_user!/1 returns the user with given id" do
-      user = user_fixture()
-      assert Authentication.get_user!(user.id) == user
+      user_fixture()
+      |> compare_user_fields
     end
 
     test "create_user/1 with valid data creates a user" do
       assert {:ok, %User{} = user} = Authentication.create_user(@valid_attrs)
       assert user.email == "email@mail.com"
-      assert user.encrypted_password == "some encrypted_password"
     end
 
     test "create_user/1 with invalid data returns error changeset" do
@@ -44,13 +54,15 @@ defmodule TodoWithAuth.AuthenticationTest do
       assert {:ok, user} = Authentication.update_user(user, @update_attrs)
       assert %User{} = user
       assert user.email == "updated@mail.com"
-      assert user.encrypted_password == "some updated encrypted_password"
+      
     end
 
     test "update_user/2 with invalid data returns error changeset" do
       user = user_fixture()
       assert {:error, %Ecto.Changeset{}} = Authentication.update_user(user, @invalid_attrs)
-      assert user == Authentication.get_user!(user.id)
+      
+      user
+      |> compare_user_fields
     end
 
     test "delete_user/1 deletes the user" do
