@@ -26,33 +26,28 @@ defmodule TodoWithAuthWeb.SessionController do
     end
   end
 
-  # def create(conn, %{"user" => user}) do
-  #   try do
-  #     # Attempt to retrieve exactly one user from the DB, whose
-  #     # email matches the one provided with the login request
-  #     user = Authentication.get_user_by_email!(user.email)
-  #     cond do
-  #       true ->
-  #         # Successful login
-  #         # Encode a JWT
-  #         {:ok, jwt, _} = Guardian.encode_and_sign(user, :token)
-
-  #         auth_conn = Guardian.Plug.api_sign_in(conn, user)
-
-  #         auth_conn
-  #         |> put_resp_header("authorization", "Bearer #{jwt}")
-  #         |> json(%{access_token: jwt}) # Return token to the client
-  #       false ->
-  #         # Unsuccessful login
-  #         conn
-  #         |> put_status(401)
-  #         |> render(TodoWithAuthWeb.ErrorView, "401.json")
-  #     end
-  #   rescue
-  #     e ->
-  #       IO.inspect e
-  #   end
-  # end
+  def create(conn, %{"user" => params}) do
+    try do
+      with %User{} = user <- Authentication.get_user_by_email!(params["email"]) do
+        with {:ok, token, claims} <- Authentication.authenticate(%{user: user, password: params["password"]}) do
+          conn
+          |> put_resp_header("authorization", "Bearer #{jwt}")
+          |> render conn, "token.json", token: token
+        else
+          conn
+          |> put_status(401)
+          |> render(TodoWithAuthWeb.ErrorView, "401.json")
+        end
+      else
+        conn
+        |> put_status(404)
+        |> render(TodoWithAuthWeb.ErrorView, "404.json")
+      end
+    rescue
+      e ->
+        Logger.error(["Failed login attempt", inspect(e)])
+    end
+  end
 
   # def sign_up_user(conn, %{"user" => user}) do
   #   changeset = User.changeset %User{}, %{email: user.email,
