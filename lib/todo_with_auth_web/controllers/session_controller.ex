@@ -18,28 +18,9 @@ defmodule TodoWithAuthWeb.SessionController do
     |> TodoWithAuthWeb.Guardian.Plug.sign_out
   end
 
-  # def callback(%{assigns: %{ueberauth_auth: auth}} = conn, _params) do
-  #   case AuthUser.basic_info(auth) do
-  #     {:ok, user} ->
-  #       sign_in_user(conn, %{"user" => user})
-  #   end
-  # case AuthUser.basic_info(auth) do
-  #     {:ok, user} ->
-  #       conn
-  #       |> render(TodoWithAuthWeb.UserView, "show.json-api", %{data: user})
-  #     {:error} ->
-  #       conn
-  #       |> put_status(401)
-  #       |> render(TodoWithAuthWeb.ErrorView, "401.json-api")
-  #   end
-  # end
-
-  def create(conn, params) do
-    # Find the user in the database based on the credentials sent with the request
-    with %User{} = user <- Authentication.get_user_by_email!(params.email) do
-      # Attempt to authenticate the user
-      with {:ok, token, _claims} <- Authentication.authenticate(%{user: user, password: params.password}) do
-        # Render the token
+  def create(conn, %{"user" => params}) do
+    with %User{} = user <- Authentication.get_user_by_email!(params["email"]) do
+      with {:ok, token, claims} <- Authentication.authenticate(%{user: user, password: params["password"]}) do
         render conn, "token.json", token: token
       end
     end
@@ -104,7 +85,7 @@ defmodule TodoWithAuthWeb.SessionController do
   def unauthenticated(conn, _) do
     conn
     |> put_status(401)
-    |> render(TodoWithAuthWeb.ErrorView, "401.json-api")
+    |> render(TodoWithAuthWeb.ErrorView, "401.json")
   end
 
   def unauthorized(conn, _) do

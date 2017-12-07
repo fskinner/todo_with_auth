@@ -124,7 +124,7 @@ defmodule TodoWithAuth.Authentication do
   Otherwise {:error, :unauthorized}
   """
   def authenticate(%{user: user, password: password}) do
-    case Comeonin.Bcrypt.checkpw(password, user.password_digest) do
+    case Comeonin.Bcrypt.checkpw(password, user.encrypted_password) do
       true ->
         TodoWithAuthWeb.Guardian.encode_and_sign(user)
       _ ->

@@ -20,7 +20,7 @@ defmodule TodoWithAuth.Mixfile do
   def application do
     [
       mod: {TodoWithAuth.Application, []},
-      extra_applications: [:logger, :runtime_tools, :comeonin, :ex_machina]
+      extra_applications: [:logger, :runtime_tools, :comeonin]
     ]
   end
 
