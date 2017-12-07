@@ -40,7 +40,8 @@ defmodule TodoWithAuth.Mixfile do
       {:gettext, "~> 0.11"},
       {:comeonin, "~> 2.0"},
       {:cowboy, "~> 1.0"},
-      {:ex_machina, "~> 2.1", only: :test}
+      {:ex_machina, "~> 2.1", only: :test},
+      {:guardian, "~> 1.0"}
     ]
   end
 
