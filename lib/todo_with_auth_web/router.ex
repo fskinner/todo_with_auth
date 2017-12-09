@@ -12,7 +12,7 @@ defmodule TodoWithAuthWeb.Router do
   scope "/api", TodoWithAuthWeb do
     pipe_through :api
   
-    resources "/users", UserController#, only: [:create]
+    resources "/users", UserController, except: [:new, :edit]
     post "/sessions", SessionController, :create
     delete "/sessions", SessionController, :delete
   end
@@ -20,6 +20,6 @@ defmodule TodoWithAuthWeb.Router do
   scope "/api", TodoWithAuthWeb do
     pipe_through [:api, :api_auth]
 
-    resources "/users", UserController#, except: [:new, :edit, :create, :index]
+    get "/current-user", UserController, :current
   end
 end

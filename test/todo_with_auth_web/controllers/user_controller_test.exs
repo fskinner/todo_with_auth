@@ -72,8 +72,41 @@ defmodule TodoWithAuthWeb.UserControllerTest do
     end
   end
 
+  describe "current user" do
+    setup [:create_user]
+    
+    test "renders current user", %{conn: conn, user: user}  do
+      {:ok, token, _claims} = TodoWithAuthWeb.Guardian.encode_and_sign(user)
+      conn = conn |> put_req_header("authorization", "Bearer #{token}")
+
+      conn = get conn, user_path(conn, :current)
+      assert json_response(conn, 200)["data"] == %{
+        "id" => user.id,
+        "email" => user.email}
+    end
+
+    test "renders 403", %{conn: conn}  do
+      conn = get conn, user_path(conn, :current)
+      assert json_response(conn, 403)["errors"] == %{"detail" => "forbidden"}
+    end
+  end
+
   defp create_user(_) do
     user = fixture(:user)
     {:ok, user: user}
   end
 end
+
+# setup %{conn: conn} do
+#   # create a user
+#   user = insert(:user, email: "user@email.com", username: "user")
+
+#   # create the token
+#   {:ok, token, _claims} = MyAppWeb.Guardian.encode_and_sign(user)
+
+#   # add authorization header to request
+#   conn = conn |> put_req_header("authorization", "Bearer #{token}")
+
+#   # pass the connection and the user to the test
+#   {:ok, conn: conn, user: user}
+# end

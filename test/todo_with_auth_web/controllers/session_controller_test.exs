@@ -26,12 +26,12 @@ defmodule TodoWithAuthWeb.SessionControllerTest do
 
     test "renders 404 when email doesnt match", %{conn: conn}  do
       conn = post conn, session_path(conn, :create), user: @wrong_email_attrs
-      assert json_response(conn, 404)["data"] != %{errors: %{detail: "Page not found"}}
+      assert json_response(conn, 404)["errors"] == %{"detail" => "Page not found"}
     end
 
     test "renders 401 when password doesnt match", %{conn: conn}  do
       conn = post conn, session_path(conn, :create), user: @wrong_pass_attrs
-      assert json_response(conn, 401)["data"] != %{errors: %{detail: "Unauthorized"}}
+      assert json_response(conn, 401)["errors"] == %{"detail" => "Unauthorized"}
     end
   end
 
@@ -41,18 +41,6 @@ defmodule TodoWithAuthWeb.SessionControllerTest do
       assert response(conn, 204)
     end
   end
-
-  # describe "delete user" do
-  #   setup [:create_user]
-
-  #   test "deletes chosen user", %{conn: conn, user: user} do
-  #     conn = delete conn, user_path(conn, :delete, user)
-  #     assert response(conn, 204)
-  #     assert_error_sent 404, fn ->
-  #       get conn, user_path(conn, :show, user)
-  #     end
-  #   end
-  # end
 
   defp create_user(_) do
     user = fixture(:user)

@@ -31,5 +31,4 @@ config :todo_with_auth, TodoWithAuthWeb.Guardian,
   issuer: "TodoWithAuth",
   ttl: { 30, :days },
   allowed_drift: 2000,
-  secret_key: "G5XlyVNL0H27ZY7tW4N/Jrt+4xvk0UYRxqOA2uksQm8qanQbbo7ojSN0+4FaC/Fv",
-  serializer: TodoWithAuth.GuardianSerializer
+  secret_key: "G5XlyVNL0H27ZY7tW4N/Jrt+4xvk0UYRxqOA2uksQm8qanQbbo7ojSN0+4FaC/Fv"

@@ -1,8 +1,6 @@
 defmodule TodoWithAuthWeb.Guardian do
   use Guardian, otp_app: :todo_with_auth
 
-
-
   def subject_for_token(resource, _claims) do
     # You can use any value for the subject of your token but
     # it should be useful in retrieving the resource later, see

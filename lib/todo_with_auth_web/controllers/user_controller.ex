@@ -39,4 +39,10 @@ defmodule TodoWithAuthWeb.UserController do
       send_resp(conn, :no_content, "")
     end
   end
+
+  def current(conn, _) do
+    user = Guardian.Plug.current_resource(conn)
+
+    render(conn, "show.json", user: user)
+  end
 end
