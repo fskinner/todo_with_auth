@@ -5,9 +5,21 @@ defmodule TodoWithAuthWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :api_auth do
+    plug TodoWithAuthWeb.Guardian.AuthPipeline
+  end
+
   scope "/api", TodoWithAuthWeb do
     pipe_through :api
+  
+    resources "/users", UserController#, only: [:create]
+    post "/sessions", SessionController, :create
+    delete "/sessions", SessionController, :delete
+  end
 
-    resources "/users", UserController, except: [:new, :edit]
+  scope "/api", TodoWithAuthWeb do
+    pipe_through [:api, :api_auth]
+
+    resources "/users", UserController#, except: [:new, :edit, :create, :index]
   end
 end

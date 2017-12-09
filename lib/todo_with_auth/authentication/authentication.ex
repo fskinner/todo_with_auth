@@ -38,6 +38,25 @@ defmodule TodoWithAuth.Authentication do
   def get_user!(id), do: Repo.get!(User, id)
 
   @doc """
+  Gets a single user by its email.
+
+  Raises `Ecto.NoResultsError` if the User does not exist.
+
+  ## Examples
+
+      iex> get_user_by_email!('a@a.com')
+      %User{}
+
+      iex> get_user!('1@2.com')
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_user_by_email(email) do
+    Repo.get_by(User, email: email)
+    |> check_empty_user
+  end
+
+  @doc """
   Creates a user.
 
   ## Examples
@@ -100,5 +119,27 @@ defmodule TodoWithAuth.Authentication do
   """
   def change_user(%User{} = user) do
     User.changeset(user, %{})
+  end
+
+  @doc """
+  Returns {:ok, jwt, claims} for auth purposes.
+
+  Otherwise {:error, :unauthorized}
+  """
+  def authenticate(%{user: user, password: password}) do
+    case Comeonin.Bcrypt.checkpw(password, user.encrypted_password) do
+      true ->
+        TodoWithAuthWeb.Guardian.encode_and_sign(user)
+      _ ->
+        {:error, :unauthorized}
+    end
+  end
+
+  defp check_empty_user(user)do
+    if user do
+      {:ok, user}
+    else
+      {:error, :not_found}
+    end
   end
 end
