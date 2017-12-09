@@ -51,7 +51,10 @@ defmodule TodoWithAuth.Authentication do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user_by_email!(email), do: Repo.get_by!(User, email: email)
+  def get_user_by_email(email) do
+    Repo.get_by(User, email: email)
+    |> check_empty_user
+  end
 
   @doc """
   Creates a user.
@@ -129,6 +132,14 @@ defmodule TodoWithAuth.Authentication do
         TodoWithAuthWeb.Guardian.encode_and_sign(user)
       _ ->
         {:error, :unauthorized}
+    end
+  end
+
+  defp check_empty_user(user)do
+    if user do
+      {:ok, user}
+    else
+      {:error, :not_found}
     end
   end
 end

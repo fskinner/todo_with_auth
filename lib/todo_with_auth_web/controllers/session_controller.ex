@@ -19,35 +19,51 @@ defmodule TodoWithAuthWeb.SessionController do
   end
 
   def create(conn, %{"user" => params}) do
-    with %User{} = user <- Authentication.get_user_by_email!(params["email"]) do
-      with {:ok, token, claims} <- Authentication.authenticate(%{user: user, password: params["password"]}) do
+    with {:ok, %User{} = user }<- Authentication.get_user_by_email(params["email"]),
+         {:ok, token, claims} <- Authentication.authenticate(%{user: user, password: params["password"]}) do
+        
         render conn, "token.json", token: token
-      end
-    end
-  end
-
-  def create(conn, %{"user" => params}) do
-    try do
-      with %User{} = user <- Authentication.get_user_by_email!(params["email"]) do
-        with {:ok, token, claims} <- Authentication.authenticate(%{user: user, password: params["password"]}) do
+      else
+        {:error, :not_found} ->
           conn
-          |> put_resp_header("authorization", "Bearer #{jwt}")
-          |> render conn, "token.json", token: token
-        else
+          |> put_status(404)
+          |> render(TodoWithAuthWeb.ErrorView, "404.json")
+
+        {:error, :unauthorized} ->
           conn
           |> put_status(401)
           |> render(TodoWithAuthWeb.ErrorView, "401.json")
-        end
-      else
-        conn
-        |> put_status(404)
-        |> render(TodoWithAuthWeb.ErrorView, "404.json")
+          
+        error ->
+          conn
+          |> put_status(500)
+          |> render(TodoWithAuthWeb.ErrorView, "500.json")
       end
-    rescue
-      e ->
-        Logger.error(["Failed login attempt", inspect(e)])
-    end
   end
+
+  # def create(conn, %{"user" => params}) do
+  #   try do
+  #     with {:ok, %User{} = user} <- Authentication.get_user_by_email!(params["email"]) do
+  #       with {:ok, token, claims} <- Authentication.authenticate(%{user: user, password: params["password"]}) do
+  #         conn
+  #         |> put_resp_header(conn, "authorization", "Bearer #{token}")
+
+  #         render conn, "token.json", token: token
+  #       else
+  #         conn
+  #         |> put_status(401)
+  #         |> render(TodoWithAuthWeb.ErrorView, "401.json")
+  #       end
+  #     else
+  #       conn
+  #       |> put_status(404)
+  #       |> render(TodoWithAuthWeb.ErrorView, "404.json")
+  #     end
+  #   rescue
+  #     e ->
+  #       Logger.error(["Failed login attempt", inspect(e)])
+  #   end
+  # end
 
   # def sign_up_user(conn, %{"user" => user}) do
   #   changeset = User.changeset %User{}, %{email: user.email,
