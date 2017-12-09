@@ -14,6 +14,7 @@ defmodule TodoWithAuthWeb.Router do
   
     resources "/users", UserController#, only: [:create]
     post "/sessions", SessionController, :create
+    delete "/sessions", SessionController, :delete
   end
 
   scope "/api", TodoWithAuthWeb do

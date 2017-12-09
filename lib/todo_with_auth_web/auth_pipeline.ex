@@ -5,4 +5,7 @@ defmodule TodoWithAuthWeb.Guardian.AuthPipeline do
 
   plug Guardian.Plug.VerifyHeader
   plug Guardian.Plug.EnsureAuthenticated
+
+  #check this afterwards
+  plug Guardian.Plug.LoadResource
 end

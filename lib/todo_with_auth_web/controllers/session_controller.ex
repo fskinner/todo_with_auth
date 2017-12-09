@@ -8,19 +8,12 @@ defmodule TodoWithAuthWeb.SessionController do
   
   action_fallback TodoWithAuthWeb.FallbackController
 
-  def request(_params) do
-  end
-
-  def delete(conn, _params) do
-    # Sign out the user
-    conn
-    |> put_status(200)
-    |> TodoWithAuthWeb.Guardian.Plug.sign_out
-  end
+  # def request(_params) do
+  # end
 
   def create(conn, %{"user" => params}) do
     with {:ok, %User{} = user }<- Authentication.get_user_by_email(params["email"]),
-         {:ok, token, claims} <- Authentication.authenticate(%{user: user, password: params["password"]}) do
+         {:ok, token, _} <- Authentication.authenticate(%{user: user, password: params["password"]}) do
         
         render conn, "token.json", token: token
       else
@@ -33,12 +26,18 @@ defmodule TodoWithAuthWeb.SessionController do
           conn
           |> put_status(401)
           |> render(TodoWithAuthWeb.ErrorView, "401.json")
-          
-        error ->
+
+        _ ->
           conn
           |> put_status(500)
           |> render(TodoWithAuthWeb.ErrorView, "500.json")
       end
+  end
+
+  def delete(conn, _params) do
+    conn
+    |> TodoWithAuthWeb.Guardian.Plug.sign_out
+    |> send_resp(:no_content, "")
   end
 
   # def create(conn, %{"user" => params}) do

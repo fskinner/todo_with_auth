@@ -1,60 +1,61 @@
-# defmodule TodoWithAuthWeb.UserControllerTest do
-#   use TodoWithAuthWeb.ConnCase
+defmodule TodoWithAuthWeb.SessionControllerTest do
+  use TodoWithAuthWeb.ConnCase
 
-#   alias TodoWithAuth.Authentication
-#   alias TodoWithAuth.Authentication.User
+  alias TodoWithAuth.Authentication
 
-#   @create_attrs %{email: "email1@mail.com", password: "some password"}
-#   @update_attrs %{email: "update@mail.com", password: "some updated password"}
-#   @invalid_attrs %{email: nil, password: nil}
+  @valid_login_attrs %{email: "email1@mail.com", password: "some password"}
+  @wrong_email_attrs %{email: "2@mail.com", password: "some password"}
+  @wrong_pass_attrs %{email: "email1@mail.com", password: "wrong password"}
 
-#   def fixture(:user) do
-#     {:ok, user} = Authentication.create_user(@create_attrs)
-#     user
-#   end
+  def fixture(:user) do
+    {:ok, user} = Authentication.create_user(@valid_login_attrs)
+    user
+  end
 
-#   setup %{conn: conn} do
-#     {:ok, conn: put_req_header(conn, "accept", "application/json")}
-#   end
+  setup %{conn: conn} do
+    {:ok, conn: put_req_header(conn, "accept", "application/json")}
+  end
 
-#   describe "index" do
-#     test "lists all users", %{conn: conn} do
-#       conn = get conn, user_path(conn, :index)
-#       assert json_response(conn, 200)["data"] == []
-#     end
-#   end
+  describe "create" do
+    setup [:create_user]
 
-#   describe "create user" do
-#     test "renders user when data is valid", %{conn: conn} do
-#       conn = post conn, user_path(conn, :create), user: @create_attrs
-#       assert %{"id" => id} = json_response(conn, 201)["data"]
+    test "renders token", %{conn: conn} do
+      conn = post conn, session_path(conn, :create), user: @valid_login_attrs
+      assert json_response(conn, 200)["token"] != nil
+    end
 
-#       conn = get conn, user_path(conn, :show, id)
-#       assert json_response(conn, 200)["data"] == %{
-#         "id" => id,
-#         "email" => "email1@mail.com"}
-#     end
+    test "renders 404 when email doesnt match", %{conn: conn}  do
+      conn = post conn, session_path(conn, :create), user: @wrong_email_attrs
+      assert json_response(conn, 404)["data"] != %{errors: %{detail: "Page not found"}}
+    end
 
-#     test "renders errors when data is invalid", %{conn: conn} do
-#       conn = post conn, user_path(conn, :create), user: @invalid_attrs
-#       assert json_response(conn, 422)["errors"] != %{}
-#     end
-#   end
+    test "renders 401 when password doesnt match", %{conn: conn}  do
+      conn = post conn, session_path(conn, :create), user: @wrong_pass_attrs
+      assert json_response(conn, 401)["data"] != %{errors: %{detail: "Unauthorized"}}
+    end
+  end
 
-#   describe "delete user" do
-#     setup [:create_user]
+  describe "delete" do
+    test "renders no content", %{conn: conn} do
+      conn = delete conn, session_path(conn, :delete)
+      assert response(conn, 204)
+    end
+  end
 
-#     test "deletes chosen user", %{conn: conn, user: user} do
-#       conn = delete conn, user_path(conn, :delete, user)
-#       assert response(conn, 204)
-#       assert_error_sent 404, fn ->
-#         get conn, user_path(conn, :show, user)
-#       end
-#     end
-#   end
+  # describe "delete user" do
+  #   setup [:create_user]
 
-#   defp create_user(_) do
-#     user = fixture(:user)
-#     {:ok, user: user}
-#   end
-# end
+  #   test "deletes chosen user", %{conn: conn, user: user} do
+  #     conn = delete conn, user_path(conn, :delete, user)
+  #     assert response(conn, 204)
+  #     assert_error_sent 404, fn ->
+  #       get conn, user_path(conn, :show, user)
+  #     end
+  #   end
+  # end
+
+  defp create_user(_) do
+    user = fixture(:user)
+    {:ok, user: user}
+  end
+end
