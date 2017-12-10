@@ -14,22 +14,12 @@ defmodule TodoWithAuthWeb.SessionController do
         
         render conn, "token.json", token: token
       else
-        {:error, :not_found} ->
-          conn
-          |> put_status(404)
-          |> render(TodoWithAuthWeb.ErrorView, "404.json")
-
-        {:error, :unauthorized} ->
-          conn
-          |> put_status(401)
-          |> render(TodoWithAuthWeb.ErrorView, "401.json")
+        {:error, :not_found} -> not_found(conn, params)
+        {:error, :unauthorized} -> unauthorized(conn, params)
 
         error ->
           IO.inspect error
-
-          conn
-          |> put_status(500)
-          |> render(TodoWithAuthWeb.ErrorView, "500.json")
+          internal_server_error(conn, params)
       end
   end
 
@@ -39,27 +29,19 @@ defmodule TodoWithAuthWeb.SessionController do
     |> send_resp(:no_content, "")
   end
 
-  def show(conn, _) do
-    user = conn
-    |> Guardian.Plug.current_resource
-
-    conn
-    |> render(TodoWithAuthWeb.UserView, "show.json", user: user)
-  end
-
-  def unauthenticated(conn, _) do
+  def unauthorized(conn, _) do
     conn
     |> put_status(401)
     |> render(TodoWithAuthWeb.ErrorView, "401.json")
   end
 
-  def unauthorized(conn, _) do
+  def internal_server_error(conn, _) do
     conn
-    |> put_status(403)
-    |> render(TodoWithAuthWeb.ErrorView, "403.json")
+    |> put_status(500)
+    |> render(TodoWithAuthWeb.ErrorView, "500.json")
   end
 
-  def no_resource(conn, _) do
+  def not_found(conn, _) do
     conn
     |> put_status(404)
     |> render(TodoWithAuthWeb.ErrorView, "404.json")
