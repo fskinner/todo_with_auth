@@ -76,9 +76,7 @@ defmodule TodoWithAuthWeb.UserControllerTest do
     setup [:create_user]
     
     test "renders current user", %{conn: conn, user: user}  do
-      {:ok, token, _claims} = TodoWithAuthWeb.Guardian.encode_and_sign(user)
-      conn = conn |> put_req_header("authorization", "Bearer #{token}")
-
+      conn = authenticate_user(conn, user)
       conn = get conn, user_path(conn, :current)
       assert json_response(conn, 200)["data"] == %{
         "id" => user.id,
@@ -91,22 +89,13 @@ defmodule TodoWithAuthWeb.UserControllerTest do
     end
   end
 
+  defp authenticate_user(conn, user) do
+    {:ok, token, _claims} = TodoWithAuthWeb.Guardian.encode_and_sign(user)
+    conn |> put_req_header("authorization", "Bearer #{token}")
+  end
+
   defp create_user(_) do
     user = fixture(:user)
     {:ok, user: user}
   end
 end
-
-# setup %{conn: conn} do
-#   # create a user
-#   user = insert(:user, email: "user@email.com", username: "user")
-
-#   # create the token
-#   {:ok, token, _claims} = MyAppWeb.Guardian.encode_and_sign(user)
-
-#   # add authorization header to request
-#   conn = conn |> put_req_header("authorization", "Bearer #{token}")
-
-#   # pass the connection and the user to the test
-#   {:ok, conn: conn, user: user}
-# end
