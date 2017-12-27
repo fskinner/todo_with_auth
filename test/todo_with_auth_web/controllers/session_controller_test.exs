@@ -34,13 +34,21 @@ defmodule TodoWithAuthWeb.SessionControllerTest do
     end
 
     test "renders 404 when email doesnt match", %{conn: conn}  do
-      conn = post conn, session_path(conn, :create), user: @wrong_email_attrs
-      assert json_response(conn, 404)["errors"] == %{"detail" => "Page not found"}
+      response =
+        conn
+        |> post(session_path(conn, :create), user: @wrong_email_attrs)
+        |> json_response(404)
+
+      assert response["errors"] == %{"detail" => "Page not found"}
     end
 
     test "renders 401 when password doesnt match", %{conn: conn}  do
-      conn = post conn, session_path(conn, :create), user: @wrong_pass_attrs
-      assert json_response(conn, 401)["errors"] == %{"detail" => "Unauthorized"}
+      response =
+        conn
+        |> post(session_path(conn, :create), user: @wrong_pass_attrs)
+        |> json_response(401)
+
+      assert response["errors"] == %{"detail" => "Unauthorized"}
     end
   end
 
