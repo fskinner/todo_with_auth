@@ -13,15 +13,24 @@ defmodule TodoWithAuthWeb.SessionControllerTest do
   end
 
   setup %{conn: conn} do
-    {:ok, conn: put_req_header(conn, "accept", "application/json")}
+    conn =
+      conn
+      |> put_req_header("accept", "application/json")
+      |> put_req_header("content-type", "application/json")
+
+    {:ok, conn: conn}
   end
 
-  describe "create" do
+  describe "create/2" do
     setup [:create_user]
 
     test "renders token", %{conn: conn} do
-      conn = post conn, session_path(conn, :create), user: @valid_login_attrs
-      assert json_response(conn, 200)["token"] != nil
+      response =
+        conn
+        |> post(session_path(conn, :create), user: @valid_login_attrs)
+        |> json_response(200)
+
+      assert response["token"] != nil
     end
 
     test "renders 404 when email doesnt match", %{conn: conn}  do
@@ -35,7 +44,7 @@ defmodule TodoWithAuthWeb.SessionControllerTest do
     end
   end
 
-  describe "delete" do
+  describe "delete/1" do
     test "renders no content", %{conn: conn} do
       conn = delete conn, session_path(conn, :delete)
       assert response(conn, 204)

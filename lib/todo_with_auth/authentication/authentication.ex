@@ -126,10 +126,11 @@ defmodule TodoWithAuth.Authentication do
   end
 
   defp check_empty_user(user)do
-    if user do
-      {:ok, user}
-    else
-      {:error, :not_found}
+    case user do
+      %User{} ->
+        {:ok, user}
+      _ ->
+        {:error, :not_found}
     end
   end
 end

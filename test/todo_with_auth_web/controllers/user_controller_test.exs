@@ -14,7 +14,12 @@ defmodule TodoWithAuthWeb.UserControllerTest do
   end
 
   setup %{conn: conn} do
-    {:ok, conn: put_req_header(conn, "accept", "application/json")}
+    conn =
+      conn
+      |> put_req_header("accept", "application/json")
+      |> put_req_header("content-type", "application/json")
+
+    {:ok, conn: conn}
   end
 
   describe "index" do
