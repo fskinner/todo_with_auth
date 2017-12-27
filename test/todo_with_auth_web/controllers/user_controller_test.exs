@@ -75,7 +75,7 @@ defmodule TodoWithAuthWeb.UserControllerTest do
   describe "current user" do
     setup [:create_user]
     
-    test "renders current user", %{conn: conn, user: user}  do
+    test "renders current user", %{conn: conn, user: user} do
       conn = authenticate_user(conn, user)
       conn = get conn, user_path(conn, :current)
       assert json_response(conn, 200)["data"] == %{

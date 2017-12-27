@@ -39,17 +39,7 @@ defmodule TodoWithAuth.Authentication do
 
   @doc """
   Gets a single user by its email.
-
-  Raises `Ecto.NoResultsError` if the User does not exist.
-
-  ## Examples
-
-      iex> get_user_by_email!('a@a.com')
-      %User{}
-
-      iex> get_user!('1@2.com')
-      ** (Ecto.NoResultsError)
-
+  
   """
   def get_user_by_email(email) do
     Repo.get_by(User, email: email)
