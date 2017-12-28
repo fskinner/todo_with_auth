@@ -99,7 +99,7 @@ defmodule TodoWithAuthWeb.UserControllerTest do
     conn |> put_req_header("authorization", "Bearer #{token}")
   end
 
-  defp create_user(_) do
+  defp create_user(_context) do
     user = fixture(:user)
     {:ok, user: user}
   end

@@ -36,8 +36,7 @@ defmodule TodoWithAuth.AuthenticationTest do
     end
 
     test "get_user!/1 returns the user with given id" do
-      user_fixture()
-      |> compare_user_fields
+      user_fixture() |> compare_user_fields
     end
 
     test "create_user/1 with valid data creates a user" do
@@ -61,8 +60,7 @@ defmodule TodoWithAuth.AuthenticationTest do
       user = user_fixture()
       assert {:error, %Ecto.Changeset{}} = Authentication.update_user(user, @invalid_attrs)
       
-      user
-      |> compare_user_fields
+      user |> compare_user_fields
     end
 
     test "delete_user/1 deletes the user" do

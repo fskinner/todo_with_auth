@@ -48,8 +48,7 @@ defmodule TodoWithAuth.MainTest do
     test "create_todo/1 with valid data creates a todo" do
       user = user_fixture()
       
-      full_attrs = @valid_attrs
-                  |> Enum.into(%{user_id: user.id})
+      full_attrs = @valid_attrs |> Enum.into(%{user_id: user.id})
     
       assert {:ok, %Todo{} = todo} = Main.create_todo(full_attrs)
       assert todo.complete == true

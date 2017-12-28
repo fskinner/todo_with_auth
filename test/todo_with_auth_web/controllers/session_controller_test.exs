@@ -59,7 +59,7 @@ defmodule TodoWithAuthWeb.SessionControllerTest do
     end
   end
 
-  defp create_user(_) do
+  defp create_user(_context) do
     user = fixture(:user)
     {:ok, user: user}
   end
