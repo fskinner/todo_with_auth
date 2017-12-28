@@ -65,7 +65,40 @@ defmodule TodoWithAuthWeb.TodoControllerTest do
     end
   end
 
-  describe "create todo" do
+  describe "show/2" do
+    setup context do
+      {_, user} = create_user(context)
+      user =
+        user
+        |> List.first
+        |> elem(1)
+
+      {_, todo} = create_todo(context, user)
+      todo =
+        todo
+        |> List.first
+        |> elem(1)
+
+      {:ok, todo: todo, user: user}
+    end
+
+    test "renders todo", %{conn: conn, todo: %Todo{id: id} = todo, user: user} do
+      response =
+        conn
+        |> authenticate_user(user)
+        |> get(todo_path(conn, :show, todo))
+        |> json_response(200)
+
+      returned_todo = response["data"]
+
+      assert returned_todo["complete"] == todo.complete
+      assert returned_todo["description"] == todo.description
+      assert returned_todo["user_id"] == user.id
+      assert returned_todo["id"] == id
+    end
+  end
+
+  describe "create/2" do
     setup [:create_user]
     
     test "renders todo when data is valid", %{conn: conn, user: user} do
@@ -94,7 +127,7 @@ defmodule TodoWithAuthWeb.TodoControllerTest do
     end
   end
 
-  describe "update todo" do
+  describe "update/2" do
     setup context do
       {_, user} = create_user(context)
       user =
@@ -137,7 +170,7 @@ defmodule TodoWithAuthWeb.TodoControllerTest do
     end
   end
 
-  describe "delete todo" do
+  describe "delete/2" do
     setup context do
       {_, user} = create_user(context)
       user =

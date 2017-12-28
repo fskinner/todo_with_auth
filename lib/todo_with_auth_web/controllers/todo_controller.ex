@@ -31,8 +31,6 @@ defmodule TodoWithAuthWeb.TodoController do
     current_user = Guardian.Plug.current_resource(conn)
     
     todo = Main.get_todo!(id)
-    IO.inspect todo
-    IO.inspect current_user
     if todo.user_id == current_user.id do
       render(conn, "show.json", todo: todo)
     else

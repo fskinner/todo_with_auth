@@ -22,14 +22,25 @@ defmodule TodoWithAuthWeb.UserControllerTest do
     {:ok, conn: conn}
   end
 
-  describe "index" do
+  describe "index/1" do
     test "lists all users", %{conn: conn} do
       conn = get conn, user_path(conn, :index)
       assert json_response(conn, 200)["data"] == []
     end
   end
 
-  describe "create user" do
+  describe "show/2" do
+    setup [:create_user]
+    
+    test "renders an user", %{conn: conn, user: user} do
+      conn = get conn, user_path(conn, :show, user)
+      assert json_response(conn, 200)["data"] == %{
+        "id" => user.id,
+        "email" => user.email}
+    end
+  end
+
+  describe "create/2" do
     test "renders user when data is valid", %{conn: conn} do
       conn = post conn, user_path(conn, :create), user: @create_attrs
       assert %{"id" => id} = json_response(conn, 201)["data"]
@@ -46,7 +57,7 @@ defmodule TodoWithAuthWeb.UserControllerTest do
     end
   end
 
-  describe "update user" do
+  describe "update user/2" do
     setup [:create_user]
 
     test "renders user when data is valid", %{conn: conn, user: %User{id: id} = user} do
@@ -65,7 +76,7 @@ defmodule TodoWithAuthWeb.UserControllerTest do
     end
   end
 
-  describe "delete user" do
+  describe "delete user/2" do
     setup [:create_user]
 
     test "deletes chosen user", %{conn: conn, user: user} do
@@ -77,7 +88,7 @@ defmodule TodoWithAuthWeb.UserControllerTest do
     end
   end
 
-  describe "current user" do
+  describe "current user/1" do
     setup [:create_user]
     
     test "renders current user", %{conn: conn, user: user} do
