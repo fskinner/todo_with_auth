@@ -39,7 +39,7 @@ defmodule TodoWithAuthWeb.SessionControllerTest do
         |> post(session_path(conn, :create), user: @wrong_email_attrs)
         |> json_response(404)
 
-      assert response["errors"] == %{"detail" => "Page not found"}
+      assert response["errors"] == %{"detail" => "Resource not found"}
     end
 
     test "renders 401 when password doesnt match", %{conn: conn}  do
