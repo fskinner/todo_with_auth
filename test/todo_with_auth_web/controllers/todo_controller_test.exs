@@ -1,6 +1,8 @@
 defmodule TodoWithAuthWeb.TodoControllerTest do
   use TodoWithAuthWeb.ConnCase
 
+  import TodoWithAuth.Factory
+
   alias TodoWithAuth.Main
   alias TodoWithAuth.Main.Todo
   alias TodoWithAuth.Authentication
@@ -103,6 +105,18 @@ defmodule TodoWithAuthWeb.TodoControllerTest do
         delete conn, todo_path(conn, :show, -1)
       end
     end
+
+    test "renders 401 when user is not todo owner", %{conn: conn, todo: todo} do
+      other_user = insert(:user)
+
+      response =
+        conn
+        |> authenticate_user(other_user)
+        |> get(todo_path(conn, :update, todo))
+        |> json_response(401)
+
+      assert response["errors"] == %{"detail" => "Unauthorized"}
+    end
   end
 
   describe "create/2" do
@@ -182,6 +196,18 @@ defmodule TodoWithAuthWeb.TodoControllerTest do
         put conn, todo_path(conn, :update, -1), todo: @update_attrs
       end
     end
+
+    test "renders 401 when user is not todo owner", %{conn: conn, todo: todo} do
+      other_user = insert(:user)
+
+      response =
+        conn
+        |> authenticate_user(other_user)
+        |> put(todo_path(conn, :update, todo), todo: @update_attrs)
+        |> json_response(401)
+
+      assert response["errors"] == %{"detail" => "Unauthorized"}
+    end
   end
 
   describe "delete/2" do
@@ -215,6 +241,18 @@ defmodule TodoWithAuthWeb.TodoControllerTest do
       assert_error_sent 404, fn ->
         delete conn, todo_path(conn, :delete, -1)
       end
+    end
+
+    test "renders 401 when user is not todo owner", %{conn: conn, todo: todo} do
+      other_user = insert(:user)
+
+      response =
+        conn
+        |> authenticate_user(other_user)
+        |> delete(todo_path(conn, :delete, todo))
+        |> json_response(401)
+
+      assert response["errors"] == %{"detail" => "Unauthorized"}
     end
   end
 

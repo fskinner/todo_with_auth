@@ -34,11 +34,7 @@ defmodule TodoWithAuthWeb.TodoController do
     if todo.user_id == current_user.id do
       render(conn, "show.json", todo: todo)
     else
-      body = Poison.encode!(
-        %{errors: %{detail: "You need to be the owner of this resource"}}
-      )
-
-      send_resp(conn, :unprocessable_entity, body)
+      conn |> unauthorized
     end
   end
 
@@ -54,11 +50,7 @@ defmodule TodoWithAuthWeb.TodoController do
         render(conn, "show.json", todo: todo)
       end
     else
-      body = Poison.encode!(
-        %{errors: %{detail: "You need to be the owner of this resource"}}
-      )
-
-      send_resp(conn, :unprocessable_entity, body)
+      conn |> unauthorized
     end
   end
 
@@ -71,11 +63,13 @@ defmodule TodoWithAuthWeb.TodoController do
         send_resp(conn, :no_content, "")
       end
     else
-      body = Poison.encode!(
-        %{errors: %{detail: "You need to be the owner of this resource"}}
-      )
-
-      send_resp(conn, :unprocessable_entity, body)
+      conn |> unauthorized
     end
+  end
+
+  defp unauthorized(conn) do
+    conn
+    |> put_status(401)
+    |> render(TodoWithAuthWeb.ErrorView, "401.json")
   end
 end
