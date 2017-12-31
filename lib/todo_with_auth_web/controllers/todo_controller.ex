@@ -35,7 +35,7 @@ defmodule TodoWithAuthWeb.TodoController do
       render(conn, "show.json", todo: todo)
     else
       body = Poison.encode!(
-        %{errors: %{detail: "You need to be owner of this resource"}}
+        %{errors: %{detail: "You need to be the owner of this resource"}}
       )
 
       send_resp(conn, :unprocessable_entity, body)
@@ -55,7 +55,7 @@ defmodule TodoWithAuthWeb.TodoController do
       end
     else
       body = Poison.encode!(
-        %{errors: %{detail: "You need to be owner of this resource"}}
+        %{errors: %{detail: "You need to be the owner of this resource"}}
       )
 
       send_resp(conn, :unprocessable_entity, body)
@@ -72,7 +72,7 @@ defmodule TodoWithAuthWeb.TodoController do
       end
     else
       body = Poison.encode!(
-        %{errors: %{detail: "You need to be owner of this resource"}}
+        %{errors: %{detail: "You need to be the owner of this resource"}}
       )
 
       send_resp(conn, :unprocessable_entity, body)
