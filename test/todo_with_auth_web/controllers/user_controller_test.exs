@@ -38,6 +38,12 @@ defmodule TodoWithAuthWeb.UserControllerTest do
         "id" => user.id,
         "email" => user.email}
     end
+
+    test "renders 404 when no user is found", %{conn: conn} do
+      assert_error_sent 404, fn ->
+        get conn, user_path(conn, :show, -1)
+      end
+    end
   end
 
   describe "create/2" do
@@ -74,6 +80,12 @@ defmodule TodoWithAuthWeb.UserControllerTest do
       conn = put conn, user_path(conn, :update, user), user: @invalid_attrs
       assert json_response(conn, 422)["errors"] != %{}
     end
+
+    test "renders 404 when no user is found", %{conn: conn} do
+      assert_error_sent 404, fn ->
+        put conn, user_path(conn, :update, -1), user: @update_attrs
+      end
+    end
   end
 
   describe "delete user/2" do
@@ -84,6 +96,12 @@ defmodule TodoWithAuthWeb.UserControllerTest do
       assert response(conn, 204)
       assert_error_sent 404, fn ->
         get conn, user_path(conn, :show, user)
+      end
+    end
+
+    test "renders 404 when no user is found", %{conn: conn} do
+      assert_error_sent 404, fn ->
+        delete conn, user_path(conn, :delete, -1)
       end
     end
   end

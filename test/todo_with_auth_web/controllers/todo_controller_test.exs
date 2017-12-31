@@ -96,6 +96,13 @@ defmodule TodoWithAuthWeb.TodoControllerTest do
       assert returned_todo["user_id"] == user.id
       assert returned_todo["id"] == id
     end
+
+    test "renders 404 when no todo is found", %{conn: conn, user: user} do
+      conn = conn |> authenticate_user(user)
+      assert_error_sent 404, fn ->
+        delete conn, todo_path(conn, :show, -1)
+      end
+    end
   end
 
   describe "create/2" do
@@ -168,6 +175,13 @@ defmodule TodoWithAuthWeb.TodoControllerTest do
 
       assert response["errors"] != %{}
     end
+
+    test "renders 404 when no todo is found", %{conn: conn, user: user} do
+      conn = conn |> authenticate_user(user)
+      assert_error_sent 404, fn ->
+        put conn, todo_path(conn, :update, -1), todo: @update_attrs
+      end
+    end
   end
 
   describe "delete/2" do
@@ -194,6 +208,13 @@ defmodule TodoWithAuthWeb.TodoControllerTest do
         |> delete(todo_path(conn, :delete, todo))
 
       assert response(conn, 204)
+    end
+
+    test "renders 404 when no todo is found", %{conn: conn, user: user} do
+      conn = conn |> authenticate_user(user)
+      assert_error_sent 404, fn ->
+        delete conn, todo_path(conn, :delete, -1)
+      end
     end
   end
 
