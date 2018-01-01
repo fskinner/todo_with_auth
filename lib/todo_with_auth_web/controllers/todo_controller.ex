@@ -1,21 +1,18 @@
 defmodule TodoWithAuthWeb.TodoController do
   use TodoWithAuthWeb, :controller
+  use TodoWithAuthWeb.BaseController
 
   alias TodoWithAuth.Main
   alias TodoWithAuth.Main.Todo
 
   action_fallback TodoWithAuthWeb.FallbackController
 
-  def index(conn, _params) do
-    current_user = Guardian.Plug.current_resource(conn)
-
+  def index(conn, _params, current_user) do
     todos = Main.list_todos(current_user.id)
     render(conn, "index.json", todos: todos)
   end
 
-  def create(conn, %{"todo" => todo_params}) do
-    current_user = Guardian.Plug.current_resource(conn)
-
+  def create(conn, %{"todo" => todo_params}, current_user) do
     params = todo_params
             |> Enum.into(%{"user_id" => current_user.id})
 
@@ -27,10 +24,9 @@ defmodule TodoWithAuthWeb.TodoController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    current_user = Guardian.Plug.current_resource(conn)
-    
+  def show(conn, %{"id" => id}, current_user) do
     todo = Main.get_todo!(id)
+    
     if todo.user_id == current_user.id do
       render(conn, "show.json", todo: todo)
     else
@@ -38,9 +34,8 @@ defmodule TodoWithAuthWeb.TodoController do
     end
   end
 
-  def update(conn, %{"id" => id, "todo" => todo_params}) do
+  def update(conn, %{"id" => id, "todo" => todo_params}, current_user) do
     todo = Main.get_todo!(id)
-    current_user = Guardian.Plug.current_resource(conn)
 
     if todo.user_id == current_user.id do
       params = todo_params
@@ -54,9 +49,8 @@ defmodule TodoWithAuthWeb.TodoController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
+  def delete(conn, %{"id" => id}, current_user) do
     todo = Main.get_todo!(id)
-    current_user = Guardian.Plug.current_resource(conn)
 
     if todo.user_id == current_user.id do
       with {:ok, %Todo{}} <- Main.delete_todo(todo) do

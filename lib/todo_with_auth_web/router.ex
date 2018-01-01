@@ -7,6 +7,7 @@ defmodule TodoWithAuthWeb.Router do
 
   pipeline :api_auth do
     plug TodoWithAuthWeb.Guardian.AuthPipeline
+    plug TodoWithAuthWeb.CurrentUserPlug
   end
 
   scope "/api", TodoWithAuthWeb do
