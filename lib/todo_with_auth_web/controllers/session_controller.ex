@@ -3,6 +3,7 @@ defmodule TodoWithAuthWeb.SessionController do
 
   alias TodoWithAuth.Authentication
   alias TodoWithAuth.Authentication.User
+  alias TodoWithAuth.ErrorView
 
   plug :scrub_params, "user" when action in [:create]
   
@@ -32,18 +33,18 @@ defmodule TodoWithAuthWeb.SessionController do
   def unauthorized(conn, _) do
     conn
     |> put_status(401)
-    |> render(TodoWithAuthWeb.ErrorView, "401.json")
+    |> render(ErrorView, "401.json")
   end
 
   def internal_server_error(conn, _) do
     conn
     |> put_status(500)
-    |> render(TodoWithAuthWeb.ErrorView, "500.json")
+    |> render(ErrorView, "500.json")
   end
 
   def not_found(conn, _) do
     conn
     |> put_status(404)
-    |> render(TodoWithAuthWeb.ErrorView, "404.json")
+    |> render(ErrorView, "404.json")
   end
 end
