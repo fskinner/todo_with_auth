@@ -3,7 +3,7 @@ defmodule TodoWithAuthWeb.SessionController do
 
   alias TodoWithAuth.Authentication
   alias TodoWithAuth.Authentication.User
-  alias TodoWithAuth.ErrorView
+  alias TodoWithAuthWeb.ErrorView
 
   plug :scrub_params, "user" when action in [:create]
   
