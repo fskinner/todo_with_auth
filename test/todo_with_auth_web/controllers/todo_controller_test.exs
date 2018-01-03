@@ -3,8 +3,8 @@ defmodule TodoWithAuthWeb.TodoControllerTest do
 
   import TodoWithAuth.Factory
 
-  alias TodoWithAuth.Main
-  alias TodoWithAuth.Main.Todo
+  alias TodoWithAuth.Todos
+  alias TodoWithAuth.Todos.Todo
   alias TodoWithAuth.Authentication
 
   @create_attrs %{complete: true, description: "some description"}
@@ -16,7 +16,7 @@ defmodule TodoWithAuthWeb.TodoControllerTest do
     attrs = @create_attrs
           |> Enum.into(%{user_id: user.id})
 
-    {:ok, todo} = Main.create_todo(attrs)
+    {:ok, todo} = Todos.create_todo(attrs)
     todo
   end
 

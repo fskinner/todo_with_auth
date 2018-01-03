@@ -1,7 +1,7 @@
 defmodule TodoWithAuth.TodoTest do
   use TodoWithAuth.DataCase
 
-  alias TodoWithAuth.Main.Todo
+  alias TodoWithAuth.Todos.Todo
 
   @valid_attrs %{complete: true, description: "ok", user_id: 1}
 

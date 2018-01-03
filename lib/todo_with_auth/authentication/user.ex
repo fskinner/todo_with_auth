@@ -9,7 +9,7 @@ defmodule TodoWithAuth.Authentication.User do
     field :encrypted_password, :string
     field :password, :string, virtual: true
     
-    has_many :todos, TodoWithAuth.Main.Todo
+    has_many :todos, TodoWithAuth.Todos.Todo
 
     timestamps()
   end

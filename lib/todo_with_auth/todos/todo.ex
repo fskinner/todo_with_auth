@@ -1,8 +1,8 @@
-defmodule TodoWithAuth.Main.Todo do
+defmodule TodoWithAuth.Todos.Todo do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias TodoWithAuth.Main.Todo
+  alias TodoWithAuth.Todos.Todo
   alias TodoWithAuth.Authentication.User
 
   schema "todos" do

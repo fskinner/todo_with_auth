@@ -1,12 +1,12 @@
-defmodule TodoWithAuth.Main do
+defmodule TodoWithAuth.Todos do
   @moduledoc """
-  The Main context.
+  The Todos context.
   """
 
   import Ecto.Query, warn: false
   alias TodoWithAuth.Repo
 
-  alias TodoWithAuth.Main.Todo
+  alias TodoWithAuth.Todos.Todo
 
   @doc """
   Returns the list of todos given an user_id.

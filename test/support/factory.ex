@@ -9,11 +9,10 @@ defmodule TodoWithAuth.Factory do
   end
 
   def todo_factory do
-    %TodoWithAuth.Main.Todo{
+    %TodoWithAuth.Todos.Todo{
       complete: true,
       description: "my random task",
-      # associations are inserted when you call `insert`
-      user: build(:user),
+      user: build(:user), # associations are inserted when you call `insert`
     }
   end
 end
