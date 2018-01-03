@@ -9,6 +9,16 @@ config :todo_with_auth, TodoWithAuthWeb.Endpoint,
 # Print only warnings and errors during test
 config :logger, level: :warn
 
+database = case System.get_env("CIRCLECI") do
+  nil -> "todo_with_auth_test"
+  _ -> "ubuntu"
+end
+
+username = case System.get_env("CIRCLECI") do
+  nil -> System.get_env("USER")
+  _ -> "ubuntu"
+end
+
 # Configure your database
 config :todo_with_auth, TodoWithAuth.Repo,
   adapter: Ecto.Adapters.Postgres,
