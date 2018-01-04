@@ -38,11 +38,14 @@ defmodule TodoWithAuth.Mixfile do
       {:phoenix_ecto, "~> 3.2"},
       {:postgrex, ">= 0.0.0"},
       {:gettext, "~> 0.11"},
-      {:comeonin, "~> 2.0"},
+      {:bcrypt_elixir, "~> 1.0"},
+      {:comeonin, "~> 4.0"},
       {:cowboy, "~> 1.0"},
       {:ex_machina, "~> 2.1", only: :test},
       {:guardian, "~> 1.0"},
-      {:cors_plug, "~> 1.2"}
+      {:cors_plug, "~> 1.2"},
+      {:distillery, "~> 1.5", runtime: false},
+      {:mix_docker, "~> 0.5.0"}
     ]
   end
 
