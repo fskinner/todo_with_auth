@@ -41,7 +41,8 @@ defmodule TodoWithAuth.Mixfile do
       {:comeonin, "~> 2.0"},
       {:cowboy, "~> 1.0"},
       {:ex_machina, "~> 2.1", only: :test},
-      {:guardian, "~> 1.0"}
+      {:guardian, "~> 1.0"},
+      {:cors_plug, "~> 1.2"}
     ]
   end
 

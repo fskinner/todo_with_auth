@@ -36,6 +36,7 @@ defmodule TodoWithAuthWeb.Endpoint do
     key: "_todo_with_auth_key",
     signing_salt: "pmYKaxrI"
 
+  plug CORSPlug
   plug TodoWithAuthWeb.Router
 
   @doc """
