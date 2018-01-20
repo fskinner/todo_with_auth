@@ -19,7 +19,7 @@ defmodule TodoWithAuth.AuthenticationTest do
       user
     end
 
-    defp compare_user_fields user do
+    defp compare_user_fields(user) do
       assert user.id == Authentication.get_user!(user.id).id
       assert user.email == Authentication.get_user!(user.id).email
       assert user.encrypted_password == Authentication.get_user!(user.id).encrypted_password
@@ -31,7 +31,7 @@ defmodule TodoWithAuth.AuthenticationTest do
       user_fixture()
 
       Authentication.list_users()
-      |> List.first
+      |> List.first()
       |> compare_user_fields
     end
 
@@ -53,13 +53,12 @@ defmodule TodoWithAuth.AuthenticationTest do
       assert {:ok, user} = Authentication.update_user(user, @update_attrs)
       assert %User{} = user
       assert user.email == "updated@mail.com"
-      
     end
 
     test "update_user/2 with invalid data returns error changeset" do
       user = user_fixture()
       assert {:error, %Ecto.Changeset{}} = Authentication.update_user(user, @invalid_attrs)
-      
+
       user |> compare_user_fields
     end
 

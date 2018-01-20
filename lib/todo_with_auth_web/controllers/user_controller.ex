@@ -4,7 +4,7 @@ defmodule TodoWithAuthWeb.UserController do
   alias TodoWithAuth.Authentication
   alias TodoWithAuth.Authentication.User
 
-  action_fallback TodoWithAuthWeb.FallbackController
+  action_fallback(TodoWithAuthWeb.FallbackController)
 
   def index(conn, _params) do
     users = Authentication.list_users()
@@ -35,6 +35,7 @@ defmodule TodoWithAuthWeb.UserController do
 
   def delete(conn, %{"id" => id}) do
     user = Authentication.get_user!(id)
+
     with {:ok, %User{}} <- Authentication.delete_user(user) do
       send_resp(conn, :no_content, "")
     end

@@ -5,28 +5,31 @@ defmodule TodoWithAuthWeb.SessionController do
   alias TodoWithAuth.Authentication.User
   alias TodoWithAuthWeb.ErrorView
 
-  plug :scrub_params, "user" when action in [:create]
-  
-  action_fallback TodoWithAuthWeb.FallbackController
+  plug(:scrub_params, "user" when action in [:create])
+
+  action_fallback(TodoWithAuthWeb.FallbackController)
 
   def create(conn, %{"user" => params}) do
-    with {:ok, %User{} = user }<- Authentication.get_user_by_email(params["email"]),
-      {:ok, token, _} <- Authentication.authenticate(%{user: user, password: params["password"]}) do
-        
-        render conn, "token.json", token: token
-      else
-        {:error, :not_found} -> not_found(conn, params)
-        {:error, :unauthorized} -> unauthorized(conn, params)
+    with {:ok, %User{} = user} <- Authentication.get_user_by_email(params["email"]),
+         {:ok, token, _} <-
+           Authentication.authenticate(%{user: user, password: params["password"]}) do
+      render(conn, "token.json", token: token)
+    else
+      {:error, :not_found} ->
+        not_found(conn, params)
 
-        error ->
-          IO.inspect error
-          internal_server_error(conn, params)
-      end
+      {:error, :unauthorized} ->
+        unauthorized(conn, params)
+
+      error ->
+        IO.inspect(error)
+        internal_server_error(conn, params)
+    end
   end
 
   def delete(conn, _params) do
     conn
-    |> TodoWithAuthWeb.Guardian.Plug.sign_out
+    |> TodoWithAuthWeb.Guardian.Plug.sign_out()
     |> send_resp(:no_content, "")
   end
 

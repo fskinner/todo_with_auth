@@ -12,7 +12,8 @@ defmodule TodoWithAuth.Factory do
     %TodoWithAuth.Todos.Todo{
       complete: true,
       description: "my random task",
-      user: build(:user), # associations are inserted when you call `insert`
+      # associations are inserted when you call `insert`
+      user: build(:user)
     }
   end
 end

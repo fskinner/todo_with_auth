@@ -7,27 +7,22 @@ defmodule TodoWithAuthWeb.ErrorViewTest do
   import Phoenix.View
 
   test "renders 401.json" do
-    assert render(ErrorView, "401.json", []) ==
-           %{errors: %{detail: "Unauthorized"}}
+    assert render(ErrorView, "401.json", []) == %{errors: %{detail: "Unauthorized"}}
   end
 
   test "renders 403.json" do
-    assert render(ErrorView, "403.json", []) ==
-           %{errors: %{detail: "Forbidden"}}
+    assert render(ErrorView, "403.json", []) == %{errors: %{detail: "Forbidden"}}
   end
 
   test "renders 404.json" do
-    assert render(ErrorView, "404.json", []) ==
-           %{errors: %{detail: "Resource not found"}}
+    assert render(ErrorView, "404.json", []) == %{errors: %{detail: "Resource not found"}}
   end
 
   test "render 500.json" do
-    assert render(ErrorView, "500.json", []) ==
-           %{errors: %{detail: "Internal server error"}}
+    assert render(ErrorView, "500.json", []) == %{errors: %{detail: "Internal server error"}}
   end
 
   test "render any other" do
-    assert render(ErrorView, "505.json", []) ==
-           %{errors: %{detail: "Internal server error"}}
+    assert render(ErrorView, "505.json", []) == %{errors: %{detail: "Internal server error"}}
   end
 end

@@ -13,8 +13,9 @@ defmodule TodoWithAuthWeb.TodoControllerTest do
   @user_attrs %{email: "email1@mail.com", password: "some password"}
 
   def fixture(:todo, user) do
-    attrs = @create_attrs
-          |> Enum.into(%{user_id: user.id})
+    attrs =
+      @create_attrs
+      |> Enum.into(%{user_id: user.id})
 
     {:ok, todo} = Todos.create_todo(attrs)
     todo
@@ -37,15 +38,17 @@ defmodule TodoWithAuthWeb.TodoControllerTest do
   describe "index/1" do
     setup context do
       {_, user} = create_user(context)
+
       user =
         user
-        |> List.first
+        |> List.first()
         |> elem(1)
 
       {_, todo} = create_todo(context, user)
+
       todo =
         todo
-        |> List.first
+        |> List.first()
         |> elem(1)
 
       {:ok, todo: todo, user: user}
@@ -58,7 +61,7 @@ defmodule TodoWithAuthWeb.TodoControllerTest do
         |> get(todo_path(conn, :index))
         |> json_response(200)
 
-      todo = response["data"] |> List.first
+      todo = response["data"] |> List.first()
 
       assert todo["complete"] == true
       assert todo["description"] == "some description"
@@ -70,15 +73,17 @@ defmodule TodoWithAuthWeb.TodoControllerTest do
   describe "show/2" do
     setup context do
       {_, user} = create_user(context)
+
       user =
         user
-        |> List.first
+        |> List.first()
         |> elem(1)
 
       {_, todo} = create_todo(context, user)
+
       todo =
         todo
-        |> List.first
+        |> List.first()
         |> elem(1)
 
       {:ok, todo: todo, user: user}
@@ -101,9 +106,10 @@ defmodule TodoWithAuthWeb.TodoControllerTest do
 
     test "renders 404 when no todo is found", %{conn: conn, user: user} do
       conn = conn |> authenticate_user(user)
-      assert_error_sent 404, fn ->
-        delete conn, todo_path(conn, :show, -1)
-      end
+
+      assert_error_sent(404, fn ->
+        delete(conn, todo_path(conn, :show, -1))
+      end)
     end
 
     test "renders 401 when user is not todo owner", %{conn: conn, todo: todo} do
@@ -121,7 +127,7 @@ defmodule TodoWithAuthWeb.TodoControllerTest do
 
   describe "create/2" do
     setup [:create_user]
-    
+
     test "renders todo when data is valid", %{conn: conn, user: user} do
       response =
         conn
@@ -151,15 +157,17 @@ defmodule TodoWithAuthWeb.TodoControllerTest do
   describe "update/2" do
     setup context do
       {_, user} = create_user(context)
+
       user =
         user
-        |> List.first
+        |> List.first()
         |> elem(1)
 
       {_, todo} = create_todo(context, user)
+
       todo =
         todo
-        |> List.first
+        |> List.first()
         |> elem(1)
 
       {:ok, todo: todo, user: user}
@@ -192,9 +200,10 @@ defmodule TodoWithAuthWeb.TodoControllerTest do
 
     test "renders 404 when no todo is found", %{conn: conn, user: user} do
       conn = conn |> authenticate_user(user)
-      assert_error_sent 404, fn ->
-        put conn, todo_path(conn, :update, -1), todo: @update_attrs
-      end
+
+      assert_error_sent(404, fn ->
+        put(conn, todo_path(conn, :update, -1), todo: @update_attrs)
+      end)
     end
 
     test "renders 401 when user is not todo owner", %{conn: conn, todo: todo} do
@@ -213,15 +222,17 @@ defmodule TodoWithAuthWeb.TodoControllerTest do
   describe "delete/2" do
     setup context do
       {_, user} = create_user(context)
+
       user =
         user
-        |> List.first
+        |> List.first()
         |> elem(1)
 
       {_, todo} = create_todo(context, user)
+
       todo =
         todo
-        |> List.first
+        |> List.first()
         |> elem(1)
 
       {:ok, todo: todo, user: user}
@@ -238,9 +249,10 @@ defmodule TodoWithAuthWeb.TodoControllerTest do
 
     test "renders 404 when no todo is found", %{conn: conn, user: user} do
       conn = conn |> authenticate_user(user)
-      assert_error_sent 404, fn ->
-        delete conn, todo_path(conn, :delete, -1)
-      end
+
+      assert_error_sent(404, fn ->
+        delete(conn, todo_path(conn, :delete, -1))
+      end)
     end
 
     test "renders 401 when user is not todo owner", %{conn: conn, todo: todo} do
@@ -270,5 +282,4 @@ defmodule TodoWithAuthWeb.TodoControllerTest do
     todo = fixture(:todo, user)
     {:ok, todo: todo}
   end
-  
 end

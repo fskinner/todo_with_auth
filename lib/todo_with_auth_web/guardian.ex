@@ -19,6 +19,6 @@ defmodule TodoWithAuthWeb.Guardian do
 
     id = claims["sub"]
     resource = TodoWithAuth.Authentication.get_user!(id)
-    {:ok,  resource}
+    {:ok, resource}
   end
 end

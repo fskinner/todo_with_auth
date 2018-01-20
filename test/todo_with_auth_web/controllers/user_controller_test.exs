@@ -24,41 +24,37 @@ defmodule TodoWithAuthWeb.UserControllerTest do
 
   describe "index/1" do
     test "lists all users", %{conn: conn} do
-      conn = get conn, user_path(conn, :index)
+      conn = get(conn, user_path(conn, :index))
       assert json_response(conn, 200)["data"] == []
     end
   end
 
   describe "show/2" do
     setup [:create_user]
-    
+
     test "renders an user", %{conn: conn, user: user} do
-      conn = get conn, user_path(conn, :show, user)
-      assert json_response(conn, 200)["data"] == %{
-        "id" => user.id,
-        "email" => user.email}
+      conn = get(conn, user_path(conn, :show, user))
+      assert json_response(conn, 200)["data"] == %{"id" => user.id, "email" => user.email}
     end
 
     test "renders 404 when no user is found", %{conn: conn} do
-      assert_error_sent 404, fn ->
-        get conn, user_path(conn, :show, -1)
-      end
+      assert_error_sent(404, fn ->
+        get(conn, user_path(conn, :show, -1))
+      end)
     end
   end
 
   describe "create/2" do
     test "renders user when data is valid", %{conn: conn} do
-      conn = post conn, user_path(conn, :create), user: @create_attrs
+      conn = post(conn, user_path(conn, :create), user: @create_attrs)
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
-      conn = get conn, user_path(conn, :show, id)
-      assert json_response(conn, 200)["data"] == %{
-        "id" => id,
-        "email" => "email1@mail.com"}
+      conn = get(conn, user_path(conn, :show, id))
+      assert json_response(conn, 200)["data"] == %{"id" => id, "email" => "email1@mail.com"}
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post conn, user_path(conn, :create), user: @invalid_attrs
+      conn = post(conn, user_path(conn, :create), user: @invalid_attrs)
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
@@ -67,24 +63,22 @@ defmodule TodoWithAuthWeb.UserControllerTest do
     setup [:create_user]
 
     test "renders user when data is valid", %{conn: conn, user: %User{id: id} = user} do
-      conn = put conn, user_path(conn, :update, user), user: @update_attrs
+      conn = put(conn, user_path(conn, :update, user), user: @update_attrs)
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
-      conn = get conn, user_path(conn, :show, id)
-      assert json_response(conn, 200)["data"] == %{
-        "id" => id,
-        "email" => "update@mail.com"}
+      conn = get(conn, user_path(conn, :show, id))
+      assert json_response(conn, 200)["data"] == %{"id" => id, "email" => "update@mail.com"}
     end
 
     test "renders errors when data is invalid", %{conn: conn, user: user} do
-      conn = put conn, user_path(conn, :update, user), user: @invalid_attrs
+      conn = put(conn, user_path(conn, :update, user), user: @invalid_attrs)
       assert json_response(conn, 422)["errors"] != %{}
     end
 
     test "renders 404 when no user is found", %{conn: conn} do
-      assert_error_sent 404, fn ->
-        put conn, user_path(conn, :update, -1), user: @update_attrs
-      end
+      assert_error_sent(404, fn ->
+        put(conn, user_path(conn, :update, -1), user: @update_attrs)
+      end)
     end
   end
 
@@ -92,33 +86,32 @@ defmodule TodoWithAuthWeb.UserControllerTest do
     setup [:create_user]
 
     test "deletes chosen user", %{conn: conn, user: user} do
-      conn = delete conn, user_path(conn, :delete, user)
+      conn = delete(conn, user_path(conn, :delete, user))
       assert response(conn, 204)
-      assert_error_sent 404, fn ->
-        get conn, user_path(conn, :show, user)
-      end
+
+      assert_error_sent(404, fn ->
+        get(conn, user_path(conn, :show, user))
+      end)
     end
 
     test "renders 404 when no user is found", %{conn: conn} do
-      assert_error_sent 404, fn ->
-        delete conn, user_path(conn, :delete, -1)
-      end
+      assert_error_sent(404, fn ->
+        delete(conn, user_path(conn, :delete, -1))
+      end)
     end
   end
 
   describe "current user/1" do
     setup [:create_user]
-    
+
     test "renders current user", %{conn: conn, user: user} do
       conn = authenticate_user(conn, user)
-      conn = get conn, user_path(conn, :current)
-      assert json_response(conn, 200)["data"] == %{
-        "id" => user.id,
-        "email" => user.email}
+      conn = get(conn, user_path(conn, :current))
+      assert json_response(conn, 200)["data"] == %{"id" => user.id, "email" => user.email}
     end
 
-    test "renders 403", %{conn: conn}  do
-      conn = get conn, user_path(conn, :current)
+    test "renders 403", %{conn: conn} do
+      conn = get(conn, user_path(conn, :current))
       assert json_response(conn, 403)["errors"] == %{"detail" => "forbidden"}
     end
   end

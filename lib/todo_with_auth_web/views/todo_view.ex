@@ -11,9 +11,6 @@ defmodule TodoWithAuthWeb.TodoView do
   end
 
   def render("todo.json", %{todo: todo}) do
-    %{id: todo.id,
-      description: todo.description,
-      complete: todo.complete,
-      user_id: todo.user_id}
+    %{id: todo.id, description: todo.description, complete: todo.complete, user_id: todo.user_id}
   end
 end

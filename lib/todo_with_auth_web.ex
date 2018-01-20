@@ -28,8 +28,9 @@ defmodule TodoWithAuthWeb do
 
   def view do
     quote do
-      use Phoenix.View, root: "lib/todo_with_auth_web/templates",
-                        namespace: TodoWithAuthWeb
+      use Phoenix.View,
+        root: "lib/todo_with_auth_web/templates",
+        namespace: TodoWithAuthWeb
 
       # Import convenience functions from controllers
       import Phoenix.Controller, only: [get_flash: 2, view_module: 1]

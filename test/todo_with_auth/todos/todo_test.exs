@@ -11,37 +11,52 @@ defmodule TodoWithAuth.TodoTest do
   end
 
   test "changeset, description empty" do
-    changeset = Todo.changeset(
-      %Todo{}, Map.put(@valid_attrs, :description, "")
-    )
+    changeset =
+      Todo.changeset(
+        %Todo{},
+        Map.put(@valid_attrs, :description, "")
+      )
+
     refute changeset.valid?
   end
 
   test "changeset, description nil" do
-    changeset = Todo.changeset(
-      %Todo{}, Map.put(@valid_attrs, :description, nil)
-    )
+    changeset =
+      Todo.changeset(
+        %Todo{},
+        Map.put(@valid_attrs, :description, nil)
+      )
+
     refute changeset.valid?
   end
 
   test "changeset, description too short" do
-    changeset = Todo.changeset(
-      %Todo{}, Map.put(@valid_attrs, :description, "a")
-    )
+    changeset =
+      Todo.changeset(
+        %Todo{},
+        Map.put(@valid_attrs, :description, "a")
+      )
+
     refute changeset.valid?
   end
 
   test "changeset, complete empty" do
-    changeset = Todo.changeset(
-      %Todo{}, Map.put(@valid_attrs, :complete, nil)
-    )
+    changeset =
+      Todo.changeset(
+        %Todo{},
+        Map.put(@valid_attrs, :complete, nil)
+      )
+
     refute changeset.valid?
   end
 
   test "changeset, user_id empty" do
-    changeset = Todo.changeset(
-      %Todo{}, Map.put(@valid_attrs, :user_id, nil)
-    )
+    changeset =
+      Todo.changeset(
+        %Todo{},
+        Map.put(@valid_attrs, :user_id, nil)
+      )
+
     refute changeset.valid?
   end
 end

@@ -18,8 +18,7 @@ defmodule TodoWithAuth.Todos do
 
   """
   def list_todos(id) do
-    query = from t in Todo,
-      where: t.user_id == ^id
+    query = from(t in Todo, where: t.user_id == ^id)
 
     Repo.all(query)
   end

@@ -6,10 +6,10 @@ defmodule TodoWithAuth.Todos.Todo do
   alias TodoWithAuth.Authentication.User
 
   schema "todos" do
-    field :complete, :boolean, default: false
-    field :description, :string
+    field(:complete, :boolean, default: false)
+    field(:description, :string)
 
-    belongs_to :user, User
+    belongs_to(:user, User)
 
     timestamps()
   end
@@ -21,6 +21,7 @@ defmodule TodoWithAuth.Todos.Todo do
     |> validate_required([:description, :complete, :user_id])
     |> validate_length(:description, min: 2)
     |> assoc_constraint(:user)
+
     # |> foreign_key_constraint(:user_id)
   end
 end

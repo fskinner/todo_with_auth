@@ -5,11 +5,11 @@ defmodule TodoWithAuth.Authentication.User do
   alias TodoWithAuth.Authentication.User
 
   schema "users" do
-    field :email, :string
-    field :encrypted_password, :string
-    field :password, :string, virtual: true
-    
-    has_many :todos, TodoWithAuth.Todos.Todo
+    field(:email, :string)
+    field(:encrypted_password, :string)
+    field(:password, :string, virtual: true)
+
+    has_many(:todos, TodoWithAuth.Todos.Todo)
 
     timestamps()
   end
@@ -19,10 +19,10 @@ defmodule TodoWithAuth.Authentication.User do
     user
     |> cast(attrs, [:email, :password])
     |> validate_required([:email, :password])
-    |> validate_length(:email, min: 5, max: 150)    
+    |> validate_length(:email, min: 5, max: 150)
     |> validate_format(:email, ~r/@/)
     |> validate_length(:password, min: 6)
-    |> unique_constraint(:email, message: "Email already taken")    
+    |> unique_constraint(:email, message: "Email already taken")
     |> put_encrypted_password
   end
 
@@ -30,6 +30,7 @@ defmodule TodoWithAuth.Authentication.User do
     case changeset do
       %Ecto.Changeset{valid?: true, changes: %{password: pass}} ->
         put_change(changeset, :encrypted_password, Comeonin.Bcrypt.hashpwsalt(pass))
+
       _ ->
         changeset
     end

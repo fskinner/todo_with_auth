@@ -8,10 +8,7 @@ defmodule TodoWithAuthWeb.TodoViewTest do
   alias TodoWithAuthWeb.TodoView
 
   defp todo_json(todo) do
-    %{id: todo.id,
-      description: todo.description,
-      complete: todo.complete,
-      user_id: todo.user_id}
+    %{id: todo.id, description: todo.description, complete: todo.complete, user_id: todo.user_id}
   end
 
   test "renders todo.json" do

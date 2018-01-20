@@ -39,7 +39,7 @@ defmodule TodoWithAuth.Authentication do
 
   @doc """
   Gets a single user by its email.
-  
+
   """
   def get_user_by_email(email) do
     Repo.get_by(User, email: email)
@@ -120,15 +120,17 @@ defmodule TodoWithAuth.Authentication do
     case Comeonin.Bcrypt.checkpw(password, user.encrypted_password) do
       true ->
         TodoWithAuthWeb.Guardian.encode_and_sign(user)
+
       _ ->
         {:error, :unauthorized}
     end
   end
 
-  defp check_empty_user(user)do
+  defp check_empty_user(user) do
     case user do
       %User{} ->
         {:ok, user}
+
       _ ->
         {:error, :not_found}
     end

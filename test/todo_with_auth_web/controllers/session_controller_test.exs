@@ -33,7 +33,7 @@ defmodule TodoWithAuthWeb.SessionControllerTest do
       assert response["token"] != nil
     end
 
-    test "renders 404 when email doesnt match", %{conn: conn}  do
+    test "renders 404 when email doesnt match", %{conn: conn} do
       response =
         conn
         |> post(session_path(conn, :create), user: @wrong_email_attrs)
@@ -42,7 +42,7 @@ defmodule TodoWithAuthWeb.SessionControllerTest do
       assert response["errors"] == %{"detail" => "Resource not found"}
     end
 
-    test "renders 401 when password doesnt match", %{conn: conn}  do
+    test "renders 401 when password doesnt match", %{conn: conn} do
       response =
         conn
         |> post(session_path(conn, :create), user: @wrong_pass_attrs)
@@ -54,7 +54,7 @@ defmodule TodoWithAuthWeb.SessionControllerTest do
 
   describe "delete/1" do
     test "renders no content", %{conn: conn} do
-      conn = delete conn, session_path(conn, :delete)
+      conn = delete(conn, session_path(conn, :delete))
       assert response(conn, 204)
     end
   end
